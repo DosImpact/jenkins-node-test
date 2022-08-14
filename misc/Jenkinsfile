@@ -6,14 +6,16 @@ node {
      commit_id = readFile('.git/commit-id').trim()
    }
    stage('test') {
-     nodejs(nodeJSInstallationName: 'nodejs') {
+    //  build config
+     nodejs(nodeJSInstallationName: 'NodeJS') {
        sh 'npm install --only=dev'
        sh 'npm test'
      }
    }
+   //  public docker hub , credentials id
    stage('docker build/push') {
      docker.withRegistry('https://index.docker.io/v2/', 'dockerhub') {
-       def app = docker.build("wardviaene/docker-nodejs-demo:${commit_id}", '.').push()
+       def app = docker.build("ehdudtkatka/jenkins-node-test:${commit_id}", '.').push()
      }
    }
 }
